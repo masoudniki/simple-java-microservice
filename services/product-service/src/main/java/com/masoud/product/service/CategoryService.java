@@ -35,8 +35,8 @@ public class CategoryService {
         return categoryRepository.save(product);
     }
 
-    public Category getCategory(Integer productId){
-        return categoryRepository.findById(productId).orElseThrow(()-> new CategoryNotFoundException("there is not any product with given information."));
+    public CategoryResponse getCategory(Integer productId){
+        return categoryRepository.findById(productId).map(categoryMapper::toCategoryResponse).orElseThrow(()-> new CategoryNotFoundException("there is not any product with given information."));
     }
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAll().stream().map(categoryMapper::toCategoryResponse).toList();

@@ -20,9 +20,10 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
-    private double availabilityQuantity;
+    @Column(name = "availability_quantity")
+    private Double availabilityQuantity;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 }

@@ -1,0 +1,5 @@
+## load each application yml file instead of loading properties from config server dor duplicate properties
+spring:
+  cloud:
+    config:
+      override-system-properties: false

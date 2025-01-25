@@ -39,8 +39,10 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product getProduct(Integer productId){
-        return productRepository.findById(productId).orElseThrow(()-> new ProductNotFoundException("there is not any product with given information."));
+    public ProductResponse getProduct(Integer productId) {
+        return productRepository.findById(productId)
+                .map(productMapper::toProductResponse)
+                .orElseThrow(() -> new ProductNotFoundException("There is not any product with the given information."));
     }
     public List<ProductResponse> getAllProducts(){
         return productRepository.findAll().stream().map(productMapper::toProductResponse).toList();

@@ -11,6 +11,7 @@ create table if not exists product (
     name varchar(255),
     available_quantity double precision not null ,
     price numeric(38,2),
+    availability_quantity double precision,
     category_id integer
                 constraint product_category_foreign_key references category
 );
