@@ -21,8 +21,8 @@ public class PaymentController {
 
 
     @GetMapping("/{paymentId}")
-    ResponseEntity<PaymentResponse> getResponseById(@PathVariable String paymentId) {
-        return ResponseEntity.ok(paymentService.)
+    ResponseEntity<PaymentResponse> getResponseById(@PathVariable Integer paymentId) {
+        return ResponseEntity.ok(paymentService.getPaymentById(paymentId));
     }
 
 }

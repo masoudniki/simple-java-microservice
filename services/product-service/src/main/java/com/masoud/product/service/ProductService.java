@@ -1,17 +1,24 @@
 package com.masoud.product.service;
 
 import ch.qos.logback.core.util.StringUtil;
+import com.masoud.product.exception.exceptions.ProductAvailabilityException;
 import com.masoud.product.exception.exceptions.ProductNotFoundException;
 import com.masoud.product.mapper.ProductMapper;
+import com.masoud.product.mapper.ReservedProductMapper;
 import com.masoud.product.model.Category;
 import com.masoud.product.model.Product;
+import com.masoud.product.model.ReservedProduct;
 import com.masoud.product.repository.ProductRepository;
+import com.masoud.product.repository.ReservedProductRepository;
 import com.masoud.product.request.ProductCreateRequest;
 import com.masoud.product.request.ProductUpdateRequest;
 import com.masoud.product.response.ProductResponse;
+import com.masoud.product.response.ReservedProductResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,6 +26,8 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final ReservedProductRepository reservedProductRepository;
+    private final ReservedProductMapper reservedProductMapper;
 
 
     public Integer createProduct(ProductCreateRequest request) {
@@ -71,5 +80,35 @@ public class ProductService {
 
     public void deleteProduct(Integer productId) {
         productRepository.deleteById(productId);
+    }
+
+    @Transactional
+    public ReservedProductResponse purchaseProduct(Integer productId, Integer customerId) {
+        // find the produce
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("There is not any product with the given information."));
+        // check product availability
+        if(product.getAvailabilityQuantity() < 0){
+            throw new ProductAvailabilityException("There is not any available products at this moment.");
+        }
+        // mark product as reserved for a user
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime reservedUntil = now.plusMinutes(15);
+
+        ReservedProduct reservedProduct = ReservedProduct.builder()
+                .product(product)
+                .customerId(customerId)
+                .createdAt(now)
+                .reservedUntil(reservedUntil)
+                .build();
+
+        product.setAvailabilityQuantity(product.getAvailabilityQuantity()-1);
+
+        productRepository.save(product);
+        reservedProductRepository.save(reservedProduct);
+
+        // return reserved time
+        return reservedProductMapper.toReservedProductResponse(reservedProduct);
     }
 }

@@ -1,0 +1,20 @@
+spring:
+  data:
+    mongodb:
+      username: admin
+      password: admin
+      host: localhost
+      port: 27017
+      database: notification
+      authentication-database: admin
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    groupId: notification-service
+
+notification:
+  default-channel:
+    name: email
+    class-path:
+server:
+  port: 8095
+

@@ -16,6 +16,8 @@ spring:
     baseline-version: 0
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
 server:
     port: 8097
 

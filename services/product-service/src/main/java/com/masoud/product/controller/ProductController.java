@@ -3,6 +3,7 @@ package com.masoud.product.controller;
 import com.masoud.product.model.Product;
 import com.masoud.product.request.ProductCreateRequest;
 import com.masoud.product.request.ProductUpdateRequest;
+import com.masoud.product.request.PurchaseProductRequest;
 import com.masoud.product.response.ProductResponse;
 import com.masoud.product.service.ProductService;
 import jakarta.validation.Valid;
@@ -41,4 +42,12 @@ public class ProductController {
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
+    @PostMapping("/purchase")
+    public ResponseEntity<?> purchaseProduct(@RequestBody @Valid PurchaseProductRequest request) {
+       return  ResponseEntity.ok(productService.purchaseProduct(
+               request.productId(),
+               request.customerId()
+       ));
+    }
+
 }

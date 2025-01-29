@@ -26,4 +26,7 @@ public class Product {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, optional = false)
+    private ReservedProduct reservedProduct;
 }

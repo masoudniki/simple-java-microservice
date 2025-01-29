@@ -13,6 +13,7 @@ import com.masoud.orderservice.repositories.OrderLineRepository;
 import com.masoud.orderservice.repositories.OrderRepository;
 import com.masoud.orderservice.request.CreateOrderRequest;
 import com.masoud.orderservice.request.CreatePaymentRequest;
+import com.masoud.orderservice.request.PurchaseProductRequest;
 import com.masoud.orderservice.response.CreatePaymentResponse;
 import com.masoud.orderservice.response.CustomerResponse;
 import com.masoud.orderservice.response.ProductResponse;
@@ -50,7 +51,9 @@ public class OrderService {
         }
         // purchase the product
         for (Integer productId : request.products()){
-            productClient.purchaseProduct(productId);
+            productClient.purchaseProduct(
+                    new PurchaseProductRequest(request.customerId(),productId)
+            );
         }
         // submit order
         Order order = Order.builder()

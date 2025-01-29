@@ -45,6 +45,50 @@ services:
     depends_on:
       - mongo
 
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:7.4.1
+    hostname: zookeeper-1
+    container_name: zookeeper-1
+    volumes:
+      - zookeeper_1_data:/var/lib/zookeeper/data
+      - broker_1:/var/lib/zookeeper/log
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zookeeper-1:2888:3888;2181
+    networks:
+      service-networks:
+
+  broker-1:
+    image: confluentinc/cp-kafka:7.4.1
+    hostname: broker-1
+    container_name: broker-1
+    volumes:
+      - broker_1:/var/lib/kafka/data
+    depends_on:
+      - zookeeper-1
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
+      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,INTERNAL://broker-1:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: HOST:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_SNAPSHOT_TRUST_EMPTY: true
+    networks:
+      service-networks:
+
+
+
+
 volumes:
   postgres_data:
   mongo_data:
+  zookeeper_1_data:
+  broker_1:
+
+networks:
+  service-networks:
