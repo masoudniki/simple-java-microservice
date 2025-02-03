@@ -23,7 +23,7 @@ public class CategoryController {
 
 
     @PostMapping
-    public ResponseEntity<Integer> createProduct(@RequestBody @Valid CategoryCreateRequest request) {
+    public ResponseEntity<Integer> createCategory(@RequestBody @Valid CategoryCreateRequest request) {
         return ResponseEntity.ok(categoryService.createCategory(request));
     }
     @PutMapping("/{categoryId}")
@@ -37,11 +37,11 @@ public class CategoryController {
         return ResponseEntity.accepted().build();
     }
     @GetMapping("/{categoryId}")
-    public ResponseEntity<?> getProductById(@PathVariable Integer categoryId) {
+    public ResponseEntity<?> getCategoryById(@PathVariable Integer categoryId) {
         return ResponseEntity.ok(categoryService.getCategory(categoryId));
     }
     @GetMapping()
-    public ResponseEntity<List<CategoryResponse>> getAllProducts() {
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 }

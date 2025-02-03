@@ -7,6 +7,7 @@ import com.masoud.orderservice.clients.PaymentClient;
 import com.masoud.orderservice.clients.ProductClient;
 import com.masoud.orderservice.events.KafkaOrderCreated;
 import com.masoud.orderservice.exceptions.BusinessException;
+import com.masoud.orderservice.mappers.OrderMapper;
 import com.masoud.orderservice.model.Order;
 import com.masoud.orderservice.model.OrderLine;
 import com.masoud.orderservice.repositories.OrderLineRepository;
@@ -16,15 +17,18 @@ import com.masoud.orderservice.request.CreatePaymentRequest;
 import com.masoud.orderservice.request.PurchaseProductRequest;
 import com.masoud.orderservice.response.CreatePaymentResponse;
 import com.masoud.orderservice.response.CustomerResponse;
+import com.masoud.orderservice.response.OrderResponse;
 import com.masoud.orderservice.response.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +38,9 @@ public class OrderService {
     private final CustomerClient customerClient;
     private final ProductClient productClient;
     private final PaymentClient paymentClient;
-    private final KafkaTemplate<String,String> kafkaTemplate;
+    private final KafkaTemplate<String,KafkaOrderCreated> kafkaTemplate;
     private final ObjectMapper objectMapper;
+    private final OrderMapper orderMapper;
     public void createOrder(CreateOrderRequest request) {
         // get the customer detail
         CustomerResponse customerResponse = customerClient.getCustomer(request.customerId())
@@ -80,17 +85,35 @@ public class OrderService {
         // produce payment in kafka
         try
         {
-            kafkaTemplate.send("order",objectMapper.writeValueAsString(            new KafkaOrderCreated(
+            SendResult<String, KafkaOrderCreated> result =  kafkaTemplate.send("order",new KafkaOrderCreated(
                     request.customerId(),
                     order.getId(),
                     payment.paymentId(),
                     request.paymentMethod(),
                     totalPrice,
                     order.getCreatedAt()
-            )));
-        }catch (JsonProcessingException e){
-            e.printStackTrace();
+            )).get();
+
+            System.out.println("Message sent: " + result.getRecordMetadata());
+        }catch (Exception exception){
+            System.out.println(exception.getMessage());
         }
 
     }
+    public List<OrderResponse> getOrders() {
+        return orderRepository.findAll().stream().map(
+            orderMapper::toOrderResponse
+        ).toList();
+    }
+
+    public OrderResponse getOrder(Integer orderId) {
+        return orderRepository.findById(orderId).map(orderMapper::toOrderResponse)
+                .orElseThrow( () -> new BusinessException("Order not found"));
+    }
+    public void deleteOrder(Integer orderId) {
+        orderRepository.deleteById(orderId);
+    }
+
+
+
 }

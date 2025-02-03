@@ -5,7 +5,7 @@ import com.masoud.paymentservice.enums.PaymentMethods;
 import java.math.BigDecimal;
 
 public record CreatePaymentRequest(
-        Integer customerId,
+        String customerId,
         Integer orderId,
         BigDecimal price,
         PaymentMethods paymentMethod

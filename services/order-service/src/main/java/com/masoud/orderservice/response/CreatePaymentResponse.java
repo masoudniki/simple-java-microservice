@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public record CreatePaymentResponse(
         Integer paymentId,
         LocalDateTime createdAt,
-        Integer customerId,
+        String customerId,
         PaymentMethods paymentMethod,
         Integer orderId
 ) {

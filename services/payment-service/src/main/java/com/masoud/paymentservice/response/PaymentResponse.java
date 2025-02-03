@@ -6,7 +6,7 @@ import com.masoud.paymentservice.enums.PaymentStatus;
 public record PaymentResponse(
         Integer id,
         Integer orderId,
-        Integer customerId,
+        String customerId,
         PaymentMethods paymentMethod,
         PaymentStatus paymentStatus
 ){

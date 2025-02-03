@@ -1,5 +1,6 @@
 package com.masoud.customerservice.customer;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,10 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @Validated
 public class Address {
+    @NotNull
     private String street;
+    @NotNull
     private String houseNumber;
+    @NotNull
     private String zipCode;
 }

@@ -20,13 +20,10 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
-    @Column(name = "availability_quantity")
-    private Double availabilityQuantity;
+    @Column(name = "available_quantity")
+    private Double availabilityQuantity=10D;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
-
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, optional = false)
-    private ReservedProduct reservedProduct;
 }

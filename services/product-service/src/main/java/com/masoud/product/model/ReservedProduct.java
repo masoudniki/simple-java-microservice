@@ -14,10 +14,12 @@ import java.time.LocalDateTime;
 public class ReservedProduct {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reserved_product_seq")
+    @SequenceGenerator(name = "reserved_product_seq", sequenceName = "reserved_product_seq", allocationSize = 1)
     private Integer Id;
     private LocalDateTime createdAt;
     private LocalDateTime reservedUntil;
-    private Integer customerId;
+    private String customerId;
 
     @OneToOne
     @JoinColumn(name = "product_id")

@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record KafkaOrderCreated(
-        Integer customerId,
+        String customerId,
         Integer orderId,
         Integer paymentId,
         PaymentMethods paymentMethod,

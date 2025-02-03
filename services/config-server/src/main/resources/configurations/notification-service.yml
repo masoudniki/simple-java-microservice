@@ -10,11 +10,31 @@ spring:
   kafka:
     bootstrap-servers: 127.0.0.1:9092
     groupId: notification-service
+    consumer:
+      properties:
+        spring.json.trusted.packages: "*"
 
 notification:
   default-channel:
     name: email
-    class-path:
+    class-path: com.masoud.notification.channels.mail.EmailChannel
 server:
   port: 8095
+
+
+  mail:
+    host: localhost
+    port: 1025
+    username: admin
+    password: admin
+    properties:
+      mail:
+        smtp:
+          trust: "*"
+        auth: true
+        starttls:
+          enabled: true
+        connectiontimeout: 5000
+        timeout: 3000
+
 

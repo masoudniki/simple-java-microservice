@@ -1,7 +1,7 @@
 package com.masoud.orderservice.request;
 
 public record PurchaseProductRequest(
-        Integer customerId,
+        String customerId,
         Integer productId
 ) {
 }

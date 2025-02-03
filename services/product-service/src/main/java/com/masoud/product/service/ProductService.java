@@ -1,6 +1,7 @@
 package com.masoud.product.service;
 
 import ch.qos.logback.core.util.StringUtil;
+import com.masoud.product.exception.exceptions.CategoryNotFoundException;
 import com.masoud.product.exception.exceptions.ProductAvailabilityException;
 import com.masoud.product.exception.exceptions.ProductNotFoundException;
 import com.masoud.product.mapper.ProductMapper;
@@ -8,6 +9,7 @@ import com.masoud.product.mapper.ReservedProductMapper;
 import com.masoud.product.model.Category;
 import com.masoud.product.model.Product;
 import com.masoud.product.model.ReservedProduct;
+import com.masoud.product.repository.CategoryRepository;
 import com.masoud.product.repository.ProductRepository;
 import com.masoud.product.repository.ReservedProductRepository;
 import com.masoud.product.request.ProductCreateRequest;
@@ -28,14 +30,23 @@ public class ProductService {
     private final ProductMapper productMapper;
     private final ReservedProductRepository reservedProductRepository;
     private final ReservedProductMapper reservedProductMapper;
-
+    private final CategoryRepository categoryRepository;
 
     public Integer createProduct(ProductCreateRequest request) {
+
+        Category category = categoryRepository.findById(request.categoryId())
+                .orElseThrow(
+                        () -> new CategoryNotFoundException("there is no category with id " + request.categoryId())
+                );
+
+
+
         var product = Product.builder()
                 .name(request.name())
                 .description(request.description())
                 .availabilityQuantity(request.availableQuantity())
                 .price(request.price())
+                .category(category)
                         .build();
 
         return productRepository.save(product).getId();
@@ -83,7 +94,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ReservedProductResponse purchaseProduct(Integer productId, Integer customerId) {
+    public ReservedProductResponse purchaseProduct(Integer productId, String customerId) {
         // find the produce
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("There is not any product with the given information."));

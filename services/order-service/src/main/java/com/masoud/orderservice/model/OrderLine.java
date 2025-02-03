@@ -1,9 +1,6 @@
 package com.masoud.orderservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -17,6 +14,8 @@ import java.math.BigDecimal;
 public class OrderLine {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_line_id_seq")
+    @SequenceGenerator(name = "order_line_id_seq", sequenceName = "order_line_id_seq", allocationSize = 1)
     private Integer id;
     private Integer productId;
     private BigDecimal salePrice;

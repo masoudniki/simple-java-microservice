@@ -2,10 +2,7 @@ package com.masoud.paymentservice.model;
 
 import com.masoud.paymentservice.enums.PaymentMethods;
 import com.masoud.paymentservice.enums.PaymentStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
@@ -21,9 +18,11 @@ import java.time.LocalDateTime;
 @Entity
 public class Payment {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_id_seq")
+    @SequenceGenerator(name = "payment_id_seq", sequenceName = "payment_id_seq", allocationSize = 1)
     Integer id;
     BigDecimal amount;
-    Integer customerId;
+    String customerId;
     Integer orderId;
     @Enumerated(EnumType.STRING)
     PaymentMethods paymentMethod;

@@ -18,6 +18,7 @@ spring:
     password: ${spring.datasource.password}
   kafka:
     bootstrap-servers: 127.0.0.1:9092
+
 server:
     port: 8097
 
@@ -25,5 +26,5 @@ application:
   config:
     customer-url: http://localhost:8090/api/v1/customer
     product-url: http://localhost:8095/api/v1/product
-    payment-url: http://localhost:8099/api/v1/payment
+    payment-url: http://localhost:8092/api/v1/payment
 

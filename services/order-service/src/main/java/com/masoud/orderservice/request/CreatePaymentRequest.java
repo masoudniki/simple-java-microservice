@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public record CreatePaymentRequest(
         Integer orderId,
-        Integer customerId,
+        String customerId,
         PaymentMethods paymentMethod,
         BigDecimal price
 ) {
